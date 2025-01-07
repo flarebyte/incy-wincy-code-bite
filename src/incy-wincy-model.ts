@@ -12,7 +12,7 @@ const programmingLanguageLabels = {
 
 const programmingLanguage = z
   .enum(programmingLanguageKey)
-  .describe(describeEnum('Encryption strength:', programmingLanguageLabels));
+  .describe(describeEnum('Programming Language:', programmingLanguageLabels));
 
 const blockKindKey = [
   'class',
@@ -21,6 +21,7 @@ const blockKindKey = [
   'function',
   'test',
   'other',
+  'import',
 ] as const;
 
 const blockKindlabels = {
@@ -30,8 +31,9 @@ const blockKindlabels = {
   function: 'Function',
   test: 'Test',
   other: 'Other',
+  import: 'Import',
 };
 
 const blockKind = z
   .enum(blockKindKey)
-  .describe(describeEnum('Encryption strength:', blockKindlabels));
+  .describe(describeEnum('Language block kind:', blockKindlabels));
