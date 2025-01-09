@@ -1,5 +1,5 @@
-import { describeEnum, stringEffectFields, stringFields } from 'faora-kai';
-import { z } from 'zod';
+import {describeEnum, stringFields} from 'faora-kai';
+import {z} from 'zod';
 
 const programmingLanguageKey = ['js', 'ts', 'dart', 'python'] as const;
 
@@ -60,15 +60,18 @@ const otherSection = z.object({
   ...codeSection,
 });
 
-const ImportSchema = z.object({
-  type: z.literal('default').or(z.literal('named')).or(z.literal('namespace')),
-  source: z.string().url().optional(),
-  defaultImport: z.string().optional(),
-  namedImports: z.array(z.string()).optional(),
-  namespace: z.string().optional(),
+const tsStyleImport = z.object({
+  source: stringFields.string1To140.describe('Source of the import'),
+  defaultImport: stringFields.string1To80
+    .optional()
+    .describe('Name of the default import'),
+  namedImports: z
+    .array(stringFields.string1To80)
+    .max(140)
+    .describe('Array of named imports'),
 });
 
-const importSection = {
+const importSection = z.object({
   kind: z.literal('import').describe('Import'),
   body: stringFields.string1To1000.describe('The full code of the block'),
   uncommentedBody: stringFields.string1To1000.describe(
@@ -76,5 +79,28 @@ const importSection = {
   ),
   importPaths: z
     .array(stringFields.string1To140)
+    .max(140)
     .describe('Paths of the imports'),
-};
+  imports: z.array(tsStyleImport).describe('Array of imports'),
+});
+
+const section = z
+  .discriminatedUnion('kind', [
+    classSection,
+    interfaceSection,
+    functionSection,
+    enumSection,
+    constSection,
+    testSection,
+    importSection,
+    otherSection,
+  ])
+  .describe('A selection of sections');
+
+const sourceFile = z.object({
+  programmingLanguage,
+  sourceFilename: stringFields.string1To200.describe(
+    'File path for the source code'
+  ),
+  sections: z.array(section),
+});
