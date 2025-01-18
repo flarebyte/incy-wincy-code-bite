@@ -134,7 +134,7 @@ const section = z
   ])
   .describe('A selection of sections');
 
-export const sourceFile = z
+export const sourceFileSchema = z
   .object({
     programmingLanguage,
     sourceFilename: stringFields.string1To200.describe(
@@ -144,3 +144,5 @@ export const sourceFile = z
   })
   .strict()
   .describe('A representation of the source code');
+
+export type IncyWincySourceModel = z.infer<typeof sourceFileSchema>;
