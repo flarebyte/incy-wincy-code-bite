@@ -146,3 +146,4 @@ export const sourceFileSchema = z
   .describe('A representation of the source code');
 
 export type IncyWincySourceModel = z.infer<typeof sourceFileSchema>;
+export type IncyWincySection = z.infer<typeof section>;
