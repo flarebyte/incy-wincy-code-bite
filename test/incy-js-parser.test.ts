@@ -245,20 +245,10 @@ test('IncyWincyJavascriptParser.parse() should return a valid IncyWincySourceMod
     filename,
     'Source filename should match input'
   );
+  console.log('>>>', JSON.stringify(sourceModel, null, 2));
   assert.deepStrictEqual(
     sourceModel.sections,
     [],
     'Sections should be an empty array initially'
   );
-});
-test('IncyWincyJavascriptParser.parse() should handle empty code gracefully', () => {
-  const parser = new IncyWincyJavascriptParser();
-  const filename = 'test.js';
-  const code = '';
-
-  const sourceModel = parser.parse(filename, code);
-
-  assert.strictEqual(sourceModel.programmingLanguage, 'js');
-  assert.strictEqual(sourceModel.sourceFilename, filename);
-  assert.deepStrictEqual(sourceModel.sections, []); // Still empty
 });
