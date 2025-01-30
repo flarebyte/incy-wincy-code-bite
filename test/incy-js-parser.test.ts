@@ -193,7 +193,7 @@ console.log(anotherPerson);
 // export function myFunction() { ... }
 
 // In your main script:
-// import { myFunction } from './myModule.js';  (This is a simplified example - requires a module bundler in a real project)
+import { myFunction } from './myModule.js';
 
 // Promises (for asynchronous operations)
 
