@@ -20,7 +20,10 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     descendantCount,
   } = child;
   const nameNode = child.childForFieldName('name');
+  const parametersNode = child.childForFieldName('parameters');
   const name = nameNode ? nameNode.text : undefined;
+  const parameters = parametersNode ? parametersNode.text : undefined;
+
   const childInfo = {
     type,
     text,
@@ -33,6 +36,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     endPosition,
     descendantCount,
     name,
+    parameters,
   };
   return childInfo;
 };
