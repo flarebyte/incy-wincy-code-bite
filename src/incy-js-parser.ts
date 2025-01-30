@@ -6,6 +6,21 @@ import javaScript from 'tree-sitter-javascript';
 const parser = new Parser();
 parser.setLanguage(javaScript);
 
+const asType = (child: Parser.SyntaxNode) => {
+  const { type } = child;
+  return type;
+};
+
+const asText = (child: Parser.SyntaxNode) => {
+  const { text } = child;
+  return text;
+};
+
+
+const asTypes = (children: Parser.SyntaxNode[]) => {
+  return children.map(asType);
+};
+
 const asChildInfo = (child: Parser.SyntaxNode) => {
   const {
     type,
@@ -27,6 +42,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
   const parameters = parametersNode ? parametersNode.text : undefined;
   const specifiers = specifiersNode ? specifiersNode.text : undefined;
   const source = sourceNode ? sourceNode.text : undefined;
+  const types = asTypes(child.children);
 
   const childInfo = {
     type,
@@ -43,6 +59,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     parameters,
     specifiers,
     source,
+    types,
   };
   return childInfo;
 };
