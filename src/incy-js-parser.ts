@@ -21,6 +21,11 @@ const asTypes = (children: Parser.SyntaxNode[]) => {
   return children.map(asType);
 };
 
+const findTextByName = (child: Parser.SyntaxNode, name: string): string | undefined => {
+  const node = child.childForFieldName(name);
+  return node ? node.text : undefined;
+};
+
 const asChildInfo = (child: Parser.SyntaxNode) => {
   const {
     type,
@@ -34,16 +39,11 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     endPosition,
     descendantCount,
   } = child;
-  const nameNode = child.childForFieldName('name');
-  const parametersNode = child.childForFieldName('parameters');
-  const specifiersNode = child.childForFieldName('specifiers');
-  const sourceNode = child.childForFieldName('source');
-  const name = nameNode ? nameNode.text : undefined;
-  const parameters = parametersNode ? parametersNode.text : undefined;
-  const specifiers = specifiersNode ? specifiersNode.text : undefined;
-  const source = sourceNode ? sourceNode.text : undefined;
+  const name = findTextByName(child, 'name');
+  const parameters = findTextByName(child, 'parameters');
+  const specifiers = findTextByName(child, 'specifiers');
+  const source = findTextByName(child, 'source');
   const types = asTypes(child.children);
-
   const childInfo = {
     type,
     text,
