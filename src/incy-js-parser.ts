@@ -57,7 +57,7 @@ const displayTypesAndText = (child: Parser.SyntaxNode) => {
 const keepIfType = (
   child: Parser.SyntaxNode,
   including: Set<string>
-): boolean => including.has(child.type);
+): boolean | undefined => (including.has(child.type) ? true : undefined);
 
 const allTypes = [
   'comment',
