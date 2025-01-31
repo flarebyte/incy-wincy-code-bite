@@ -28,6 +28,14 @@ const findTextByName = (
   return node ? node.text : undefined;
 };
 
+const findAnyByNameAsText = (
+  child: Parser.SyntaxNode,
+  name: string
+): string | undefined => {
+  const nodes = child.descendantsOfType(name);
+  return nodes[0] ? nodes[0].text : undefined;
+};
+
 const findTextByChildName = (
   child: Parser.SyntaxNode,
   name: string,
@@ -99,7 +107,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     descendantCount,
   } = child;
   const name = findTextByName(child, 'name');
-  const identifier = findTextByName(child, 'identifier');
+  const identifier = findAnyByNameAsText(child, 'identifier');
   const parameters = findTextByName(child, 'parameters');
   const source = findTextByName(child, 'source');
   const constName = findTextByChildName(child, 'let', 'identifier');
