@@ -50,8 +50,37 @@ const asAllDesc = (child: Parser.SyntaxNode): TypeAndText[] => {
   const results: TypeAndText[] = [];
 
   do {
-    results.push({type: cursor.nodeType, text: cursor.nodeText});
-  } while (cursor.gotoNextSibling());
+    const type = cursor.nodeType;
+    const text = cursor.nodeText;
+    results.push({type, text});
+  } while (cursor.gotoNextSibling() || cursor.gotoFirstChild());
+
+  return results;
+};
+
+const displayTypesAndText = (child: Parser.SyntaxNode) => {
+  const cursor = child.walk();
+  const results: TypeAndText[] = [];
+
+  do {
+    const type = cursor.nodeType;
+    const text = cursor.nodeText;
+    results.push({type, text});
+
+    if (cursor.gotoFirstChild()) {
+      continue;
+    }
+
+    if (cursor.gotoNextSibling()) {
+      continue;
+    }
+
+    while (cursor.gotoParent()) {
+      if (cursor.gotoNextSibling()) {
+        break;
+      }
+    }
+  } while (cursor.currentNode !== child);
 
   return results;
 };
@@ -70,11 +99,12 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     descendantCount,
   } = child;
   const name = findTextByName(child, 'name');
+  const identifier = findTextByName(child, 'identifier');
   const parameters = findTextByName(child, 'parameters');
   const source = findTextByName(child, 'source');
-  const constName = findTextByChildName(child, 'let', 'name');
+  const constName = findTextByChildName(child, 'let', 'identifier');
   const types = asTypes(child.children);
-  const descOverview = asAllDesc(child);
+  const descOverview = displayTypesAndText(child);
   const childInfo = {
     type,
     text,
@@ -87,6 +117,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     endPosition,
     descendantCount,
     name,
+    identifier,
     parameters,
     source,
     types,
