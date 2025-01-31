@@ -22,6 +22,14 @@ const findAnyByNameAsText = (
   return nodes[0] ? nodes[0].text : undefined;
 };
 
+const findAllByNameAsText = (
+  child: Parser.SyntaxNode,
+  name: string
+): string[] => {
+  const nodes = child.descendantsOfType(name);
+  return nodes.map((node) => node.text);
+};
+
 type TypeAndText = {
   type: string;
   text: string;
@@ -100,6 +108,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     findAnyByNameAsText(child, 'identifier');
   const parameters = findTextByName(child, 'parameters');
   const source = findTextByName(child, 'source');
+  const importSpecifier = findAllByNameAsText(child, 'import_specifier');
   const descOverview = displayTypesAndText(child);
   const childInfo = {
     type,
@@ -116,6 +125,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     identifier,
     parameters,
     source,
+    importSpecifier,
     descOverview,
   };
   return childInfo;

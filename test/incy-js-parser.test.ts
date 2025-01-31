@@ -229,11 +229,15 @@ async function getData() {
 getData();
 `;
 
+const jsImport = `
+import { myFunction, myFunction2, myFunction3 } from './myModule.js';
+`;
+
 test('IncyWincyJavascriptParser.parse() should return a valid IncyWincySourceModel', () => {
   const parser = new IncyWincyJavascriptParser();
   const filename = 'test.js';
 
-  const sourceModel = parser.parse(filename, jsContent);
+  const sourceModel = parser.parse(filename, jsImport);
 
   assert.strictEqual(
     sourceModel.programmingLanguage,
