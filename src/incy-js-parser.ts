@@ -40,6 +40,22 @@ const findTextByChildName = (
   }
 };
 
+type TypeAndText = {
+  type: string;
+  text: string;
+};
+
+const asAllDesc = (child: Parser.SyntaxNode): TypeAndText[] => {
+  const cursor = child.walk();
+  const results: TypeAndText[] = [];
+
+  do {
+    results.push({type: cursor.nodeType, text: cursor.nodeText});
+  } while (cursor.gotoNextSibling());
+
+  return results;
+};
+
 const asChildInfo = (child: Parser.SyntaxNode) => {
   const {
     type,
@@ -58,6 +74,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
   const source = findTextByName(child, 'source');
   const constName = findTextByChildName(child, 'let', 'name');
   const types = asTypes(child.children);
+  const descOverview = asAllDesc(child);
   const childInfo = {
     type,
     text,
@@ -74,6 +91,7 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     source,
     types,
     constName,
+    descOverview,
   };
   return childInfo;
 };
