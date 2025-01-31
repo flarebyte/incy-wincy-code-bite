@@ -34,7 +34,7 @@ const displayTypesAndText = (child: Parser.SyntaxNode) => {
   do {
     const type = cursor.nodeType;
     const text = cursor.nodeText;
-    results.push({type, text});
+    results.push({ type, text });
 
     if (cursor.gotoFirstChild()) {
       continue;
@@ -54,6 +54,33 @@ const displayTypesAndText = (child: Parser.SyntaxNode) => {
   return results;
 };
 
+const keepIfType = (
+  child: Parser.SyntaxNode,
+  including: Set<string>
+): boolean => including.has(child.type);
+
+const allTypes = [
+  'comment',
+  'lexical_declaration',
+  'expression_statement',
+  'if_statement',
+  'switch_statement',
+  'for_statement',
+  'while_statement',
+  'do_statement',
+  'for_in_statement',
+  'function_declaration',
+  'class_declaration',
+  'try_statement',
+  'ERROR',
+  'import_statement',
+];
+
+const typesForIdentifier = new Set([
+  'lexical_declaration',
+  'if_statement',
+  'switch_statement',
+]);
 const asChildInfo = (child: Parser.SyntaxNode) => {
   const {
     type,
@@ -68,7 +95,9 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
     descendantCount,
   } = child;
   const name = findTextByName(child, 'name');
-  const identifier = findAnyByNameAsText(child, 'identifier');
+  const identifier =
+    keepIfType(child, typesForIdentifier) &&
+    findAnyByNameAsText(child, 'identifier');
   const parameters = findTextByName(child, 'parameters');
   const source = findTextByName(child, 'source');
   const descOverview = displayTypesAndText(child);
@@ -95,8 +124,12 @@ const asChildInfo = (child: Parser.SyntaxNode) => {
 export class IncyWincyJavascriptParser implements IncyWincyCodeParser {
   parse(sourceFilename: string, code: string): IncyWincySourceModel {
     const tree = parser.parse(code);
-    const {children} = tree.rootNode;
+    const { children } = tree.rootNode;
     const childrenInfo = children.map(asChildInfo);
+    const types = childrenInfo
+      .filter((child) => child.identifier)
+      .map((child) => ({ type: child.type, identifier: child.identifier }));
+    // console.log(JSON.stringify([...types]));
     console.log(JSON.stringify(childrenInfo));
 
     const sourceModel: IncyWincySourceModel = {

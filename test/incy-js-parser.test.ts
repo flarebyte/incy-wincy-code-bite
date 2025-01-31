@@ -193,7 +193,7 @@ console.log(anotherPerson);
 // export function myFunction() { ... }
 
 // In your main script:
-import { myFunction } from './myModule.js';
+import { myFunction, myFunction2, myFunction3 } from './myModule.js';
 
 // Promises (for asynchronous operations)
 
